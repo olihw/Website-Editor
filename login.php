@@ -11,7 +11,8 @@ echo "1";
 		if(password_verify($password, $row['Password'])) {
 			session_start();
 			$_SESSION['user'] = $username;
-			header("location: search.html");
+			$_SESSION['company'] = $row['Company'];
+			header("location: search.php");
 		} else {
 			header("location: index.php?error=1");
 		}

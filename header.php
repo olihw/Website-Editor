@@ -8,8 +8,9 @@
 	}
 
 ?>
+<link rel="stylesheet" href="css/main.css">
 <header>
-	<p>User: <? echo $_SESSION['user'];?></p>
-	<p>Company: <? echo $_SESSION['company'];?></p>
-	<a href="logout.php">Log out</a>
+	<p class="company">Company: <? echo $_SESSION['company'];?></p>
+	<p class="user">User: <? echo $_SESSION['user'];?></p>
+	<a class="logout" href="logout.php">Log out</a>
 </header>

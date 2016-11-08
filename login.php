@@ -1,6 +1,5 @@
 <?php
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-echo "1";
 	$username = $_POST["username"];
 	$password = $_POST['password'];
 	$con = mysqli_connect("localhost", "root", "root")or die(mysql_error());

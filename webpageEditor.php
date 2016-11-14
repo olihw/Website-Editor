@@ -9,43 +9,50 @@
 <script>
 	$(document).ready(function() {
 		$.ajax({
-        url: 'retrieveTemplates.php',
-        type: 'GET',
-        dataType: "json"
-	    }).done(function(data){
-	        var html = JSON.stringify(data);
-	        console.log(html);
-	        html = html.replace(/( ?:\\[rnt]|[\r\n\t]+)+/g, "");
-	        $(".htmlContainer").append(getStyles(html));
-	        var sections = splitSections(html);
-	        $(".htmlContainer").append(sections);
-	        document.getElementById('container').contentWindow.document.write(getStyles(html));
-	        document.getElementById('container').contentWindow.document.write(sections[0].outerHTML);
-	        document.getElementById('container').contentWindow.document.write(sections[1].outerHTML);
-	        document.getElementById('container').contentWindow.document.write(sections[2].outerHTML);
-	    });
+		url: 'retrieveTemplates.php',
+		type: 'GET',
+		dataType: "json"
+		}).done(function(data){
+			var html = JSON.stringify(data);
+			html = html.replace(/(?:\\[rnt]|[\r\n\t]+)+/g, "");
+			var sections = splitSections(html);
+			$(".htmlContainer").append(sections);
+			$(".htmlContainer").append(getStyles(html));
+			});
 
-	    function splitSections (html) {
-	    	html = html.substring(1,html.length-1);
-	    	var elements = $(html);
-	    	var sections = [];
-	    	for(i=0;i<elements.length;i++) {
-	    		if(elements[i].tagName == "SECTION") {
-	    			sections.push(elements[i]);
-	    		}
-	    	}
-	    	return sections;
-	    }
+		function splitSections (html) {
+			html = html.substring(1,html.length-1);
+			var elements = $(html);
+			var sections = [];
+			for(i=0;i<elements.length;i++) {
+				if(elements[i].tagName == "SECTION") {
+					sections.push(elements[i]);
+				}
+			}
+			return sections;
+		}
 
-	    function getStyles (html) {
-	    	html = html.substring(1,html.length-1);
-	    	var elements = $(html);
-	    	for(i=0;i<elements.length;i++) {
-	    		if(elements[i].tagName == "STYLE") {
-	    			return "<style type='text/css'>" + elements[i].innerHTML + "</style>";
-	    		}
-	    	}
-	    }
+		function getStyles (html) {
+			html = html.substring(1,html.length-1);
+			var elements = $(html);
+			for(i=0;i<elements.length;i++) {
+				if(elements[i].tagName == "STYLE") {
+					return "<style type='text/css'>" + addContainer(elements[i].innerHTML) + "</style>";
+				}
+			}
+		}
+
+		function addContainer (styles) {
+			var css = styles.split('}');
+			for(var style in css) {
+				if(css[style] == ""){
+
+				} else {
+					css[style] = ".htmlContainer.template "+css[style]+"} ";
+				}
+			}
+			return css.join().replace(/,/g,'');
+		}	
 	});
 </script>
 <style type="text/css">
@@ -57,9 +64,6 @@
 </style>
 </head>
 <body>
-<section><h1>TESTET</h1></section>
-<div class="htmlContainer"></div>
-<section><h1>TESTET</h1></section>
-<iframe id="container"></iframe>
+<div class="htmlContainer template"></div>
 </body>
 </html> 

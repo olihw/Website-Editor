@@ -1,3 +1,4 @@
 30/10/2016 - git setup completed.
 31/10/2016 - Grunt setup, header file created, logout php script written, session variable created, layout for LESS and CSS, gitignore file.
 08/11/2016 - Started retrieval of template and grabbing the html without the JS/CSS
+13/11/2016 - Applying the CSS and adding the HTMLcontainer tag to all the css.

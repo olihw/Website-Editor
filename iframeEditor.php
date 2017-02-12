@@ -37,12 +37,14 @@
 		<p>Text editor</p>
 		<textarea  class="text-input"></textarea>
 	</div>
+	<button class="savePage">SAVE</button>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript" src="plugins/Sortable.js"></script>
 <script>
 	$(document).ready(function() {
-		$.ajax({
+		var templateLocation;
+		$.ajax({ //get more information and pass it all through.
 			url: "retrieveTemplates.php",
 			data: {
 				template: location.hash.substring(1)
@@ -59,7 +61,25 @@
 				xhttp.open("get",JSON.parse(response), true);
 				xhttp.send();
 
+				var templateArray = JSON.parse(response).split('/');
+				templateLocation = templateArray[templateArray.length-1];
+
 			}});
+
+		$(".savePage").click(function(){
+			var page = $(".htmlContainer")[0].innerHTML;
+			$.ajax({
+			url: "saveTemplates.php",
+			data: {
+				template: page,
+				locationName: templateLocation,
+				name: location.hash.substring(1)
+			},
+			type: 'post',
+			success: function(response){
+				alert("saved");
+			}});
+		})
 
 		// function splitSections (html) {
 		// 	html = html.substring(1,html.length-1);
@@ -116,7 +136,7 @@
 				handle: ".dragable",
 				animation: 150
 			});
-			$("#htmlContainer").append('<button class="preview">Preview</button>')
+			//$("#htmlContainer").append('<button class="preview">Preview</button>')
 			$("h1, span").click(function(){
 				var currentComponent = $(this);
 				var currentText = $(this).text();

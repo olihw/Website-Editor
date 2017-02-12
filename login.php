@@ -2,7 +2,7 @@
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 	$username = $_POST["username"];
 	$password = $_POST['password'];
-	$con = mysqli_connect("localhost", "maoh3", "9P1SYmEK4I")or die(mysql_error());
+	$con = mysqli_connect("localhost", "root", "root")or die(mysql_error());
 	mysqli_select_db($con ,"c452project")or die("Cannot connect to database");
 	$query = mysqli_query($con, "Select * from users WHERE Username = '$username'");
 	if (mysqli_num_rows($query)==1) {

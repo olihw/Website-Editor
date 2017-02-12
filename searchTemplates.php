@@ -1,5 +1,5 @@
 <?php
-	$con = mysqli_connect("localhost", "maoh3", "9P1SYmEK4I", "c452project")or die(mysql_error());
+	$con = mysqli_connect("localhost", "root", "root", "c452project")or die(mysql_error());
 	$query = mysqli_query($con, "Select * from templates");
 	
 	$templates = "";

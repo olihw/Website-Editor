@@ -1,6 +1,5 @@
 <?php
 	$template = $_POST['template'];
-	echo $template;
 	$templatelocation = $_POST['locationName'];
 	$templateName = $_POST['name'];
 	$templateID = 5; //hardcoded atm will need to be passed through from iframeEditor.php
@@ -23,4 +22,6 @@
 	$file = fopen("Uploads/".$templateName."/".$versionNumber."/".$templatelocation, "w"); //will need to be changed to include company name as well as test page.
 	fwrite($file, $template);
 	fclose($file);
+
+	
 ?>

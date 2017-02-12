@@ -30,6 +30,15 @@
 		cursor: move;
   		cursor: -webkit-grabbing;
 	}
+	.promptSave {
+		position: relative;
+		top: -50%;
+		display: none;
+		background-color: rgb(255,255,255);
+		padding: 20px;
+		width: 300px;
+		margin: 0 auto;
+	}
 </style>
 <body>
 	<div id="htmlContainer" class="htmlContainer template"></div>
@@ -37,7 +46,14 @@
 		<p>Text editor</p>
 		<textarea  class="text-input"></textarea>
 	</div>
+	<button class="previewPage">Preview</button>
 	<button class="savePage">SAVE</button>
+	<button class="downloadPage">Download</button>
+	<div class="promptSave">
+		<p>Do you wish to save before you download?</p>
+		<button class="yesSave">Yes</button>
+		<button class="noSave">No</button>
+	</div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript" src="plugins/Sortable.js"></script>
@@ -67,19 +83,26 @@
 			}});
 
 		$(".savePage").click(function(){
-			var page = $(".htmlContainer")[0].innerHTML;
-			$.ajax({
-			url: "saveTemplates.php",
-			data: {
-				template: page,
-				locationName: templateLocation,
-				name: location.hash.substring(1)
-			},
-			type: 'post',
-			success: function(response){
-				alert("saved");
-			}});
-		})
+			savePages();
+		});
+
+		$(".previewPage").click(function(){
+			previewPages();
+		});
+
+		$(".downloadPage").click(function(){
+			$(".promptSave").show();
+		});
+
+		$(".yesSave").click(function(){
+			$(".promptSave").hide();
+			savePages();
+		});
+
+		$(".noSave").click(function(){
+			$(".promptSave").hide();
+			previewPages("download"); 
+		});
 
 		// function splitSections (html) {
 		// 	html = html.substring(1,html.length-1);
@@ -146,6 +169,51 @@
 
 				keypress(currentComponent);
 			});
+		}
+
+		function savePages() {
+			var page = $(".htmlContainer")[0].innerHTML;
+			$.ajax({
+			url: "saveTemplates.php",
+			data: {
+				template: page,
+				locationName: templateLocation,
+				name: location.hash.substring(1)
+			},
+			type: 'post',
+			success: function(response){
+			}});
+		}
+
+		function previewPages(downloadable) {
+			var page = $(".htmlContainer")[0].innerHTML;
+			$.ajax({
+			url: "previewTemplates.php",
+			data: {
+				template: page,
+				locationName: templateLocation,
+			},
+			type: 'post',
+			success: function(response){
+				if(downloadable == "download") {
+					downloadFile(JSON.parse(response));
+				} else {
+					window.open(JSON.parse(response),'_blank');
+				}
+			}});
+		}
+
+		function downloadFile(filelocation) {
+			$.ajax({
+			url: "downloadFile.php",
+			data: {
+				location: filelocation,
+				templateName: templateLocation
+			},
+			type: 'post',
+			success: function(response){
+				window.location.assign(JSON.parse(response));
+			}});
 		}
 	});
 </script>

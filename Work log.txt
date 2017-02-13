@@ -4,4 +4,5 @@
 13/11/2016 - Applying the CSS and adding the HTMLcontainer tag to all the css. Realised need to use Iframe for security reasons and to make sure it doesn't influnence other aspects on the site.
 04/01/2017 - Basic structure now in place for demo, horizontal functionality
 11/02/2017 - Sasve functionality added.
-12/02/2016 - Preview and download functionality addded.
+12/02/2017 - Preview and download functionality addded.
+13/02/2017 - Font size functionality added and text alignment.

@@ -44,8 +44,11 @@
 	<div id="htmlContainer" class="htmlContainer template"></div>
 	<div class="editor">
 		<p>Text editor</p>
-		<button class=textSizeUp>Font up</button>
-		<button class=textSizeDown>Font down</button>
+		<button class='textSizeUp'>Font up</button>
+		<button class='textSizeDown'>Font down</button>
+		<button class="left">Left</button>
+		<button class="center">center</button>
+		<button class="right">right</button>
 		<p class=currentFontSize></p>
 		<textarea  class="text-input"></textarea>
 	</div>
@@ -151,12 +154,19 @@
 					} else {
 						$(currentComponent).text($(".text-input").val());
 						$(".editor").hide();
-						$(".text-input").unbind('keypress');
-						$(".textSizeDown").unbind('click');
-						$(".textSizeUp").unbind('click');
+						unbindEditor();
 					}
 				}
 			});
+		}
+
+		function unbindEditor () {
+			$(".text-input").unbind('keypress');
+			$(".textSizeDown").unbind('click');
+			$(".textSizeUp").unbind('click');
+			$(".left").unbind('click');
+			$(".center").unbind('click');
+			$(".right").unbind('click');
 		}
 
 		function fontSize(currentComponent, up) {
@@ -198,6 +208,18 @@
 
 				$('.textSizeUp').bind('click', function(){
 					fontSize(currentComponent, true);
+				});
+
+				$('.left').bind('click', function(){
+					currentComponent.css('text-align', 'left');
+				});
+
+				$('.center').bind('click', function(){
+					currentComponent.css('text-align', 'center');
+				});
+
+				$('.right').bind('click', function(){
+					currentComponent.css('text-align', 'right');
 				});
 
 				keypress(currentComponent);

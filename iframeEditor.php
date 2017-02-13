@@ -44,6 +44,9 @@
 	<div id="htmlContainer" class="htmlContainer template"></div>
 	<div class="editor">
 		<p>Text editor</p>
+		<button class=textSizeUp>Font up</button>
+		<button class=textSizeDown>Font down</button>
+		<p class=currentFontSize></p>
 		<textarea  class="text-input"></textarea>
 	</div>
 	<button class="previewPage">Preview</button>
@@ -104,6 +107,7 @@
 			previewPages(1); 
 		});
 
+
 		// function splitSections (html) {
 		// 	html = html.substring(1,html.length-1);
 		// 	var elements = $(html);
@@ -140,6 +144,7 @@
 
 		function keypress (currentComponent) {
 			$(".text-input").keypress(function(e){
+				e.stopPropagation();
 				if(e.keyCode == '13') {
 					if($(".text-input").val() == '') {
 
@@ -147,9 +152,24 @@
 						$(currentComponent).text($(".text-input").val());
 						$(".editor").hide();
 						$(".text-input").unbind('keypress');
+						$(".textSizeDown").unbind('click');
+						$(".textSizeUp").unbind('click');
 					}
 				}
 			});
+		}
+
+		function fontSize(currentComponent, up) {
+			var currentFontSize = currentComponent.css('font-size');
+			var adjustment = parseInt(currentFontSize.split('px')[0])-1+'px'
+			
+			if(up) {
+				adjustment = parseInt(currentFontSize.split('px')[0])+1+'px'
+			}
+			
+			currentComponent.css('font-size', adjustment);
+			currentFontSize = adjustment;
+			$(".currentFontSize").text(currentFontSize);
 		}
 
 		function afterLoad() {
@@ -160,12 +180,25 @@
 				animation: 150
 			});
 			//$("#htmlContainer").append('<button class="preview">Preview</button>')
-			$("h1, span").click(function(){
+			$("h1, span").bind('click',function(event){
+				event.stopPropagation();
+
 				var currentComponent = $(this);
+				console.log(currentComponent);
 				var currentText = $(this).text();
+				var currentFontSize = currentComponent.css('font-size');
 				$(".text-input").val("");	
-				$(".text-input").val(currentText);				
+				$(".text-input").val(currentText);
+				$(".currentFontSize").text(currentFontSize);				
 				$(".editor").show();
+
+				$('.textSizeDown').bind('click', function(){
+					fontSize(currentComponent, false);
+				});
+
+				$('.textSizeUp').bind('click', function(){
+					fontSize(currentComponent, true);
+				});
 
 				keypress(currentComponent);
 			});
@@ -208,7 +241,7 @@
 				}
 			}});
 		}
-
+  
 		function downloadFile(filelocation) {
 			$.ajax({
 			url: "downloadFile.php",

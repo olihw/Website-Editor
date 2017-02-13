@@ -23,5 +23,7 @@
 	fwrite($file, $template);
 	fclose($file);
 
+
+	echo json_encode("Uploads/".$templateName."/".$versionNumber."/".$templatelocation);
 	
 ?>

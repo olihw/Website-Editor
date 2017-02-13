@@ -96,12 +96,12 @@
 
 		$(".yesSave").click(function(){
 			$(".promptSave").hide();
-			savePages();
+			savePages(1);
 		});
 
 		$(".noSave").click(function(){
 			$(".promptSave").hide();
-			previewPages("download"); 
+			previewPages(1); 
 		});
 
 		// function splitSections (html) {
@@ -171,7 +171,7 @@
 			});
 		}
 
-		function savePages() {
+		function savePages(downloadable) {
 			var page = $(".htmlContainer")[0].innerHTML;
 			$.ajax({
 			url: "saveTemplates.php",
@@ -182,6 +182,12 @@
 			},
 			type: 'post',
 			success: function(response){
+				if(downloadable) {
+					console.log(JSON.parse(response));
+					downloadFile(JSON.parse(response).location);
+				} else {
+					window.open(JSON.parse(response),'_blank');
+				}
 			}});
 		}
 
@@ -195,7 +201,7 @@
 			},
 			type: 'post',
 			success: function(response){
-				if(downloadable == "download") {
+				if(downloadable) {
 					downloadFile(JSON.parse(response));
 				} else {
 					window.open(JSON.parse(response),'_blank');

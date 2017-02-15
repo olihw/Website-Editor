@@ -2,7 +2,7 @@
 	$template = $_POST['template'];
 	$templatelocation = $_POST['locationName'];
 	$templateName = $_POST['name'];
-	$templateID = 5; //hardcoded atm will need to be passed through from iframeEditor.php
+	$templateID = $_POST['templateID']; //hardcoded atm will need to be passed through from iframeEditor.php
 	$date = date('Y-m-d H:i:s');
 	$versionNumber = 2;
 

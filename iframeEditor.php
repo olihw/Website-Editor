@@ -66,13 +66,24 @@
 <script>
 	$(document).ready(function() {
 		var templateLocation;
+		var templateID;
+		var templateName;
+		var versionNumber = 1;
+		if(location.hash.substring(1).indexOf('||') == -1) {
+			templateName = location.hash.substring(1);
+		} else {
+			templateName = location.hash.substring(1).split('||')[0];
+			versionNumber = location.hash.substring(1).split('||')[1];
+		}
 		$.ajax({ //get more information and pass it all through.
 			url: "retrieveTemplates.php",
 			data: {
-				template: location.hash.substring(1)
+				template: templateName,
+				version: versionNumber
 			},
 			type: 'post',
 			success: function(response){
+				var responseParsed = JSON.parse(response);
 				var xhttp = new XMLHttpRequest();
 				xhttp.onreadystatechange = function () {
 					if (this.readyState == 4 && this.status == 200) {
@@ -80,12 +91,14 @@
 						afterLoad();	
 					}
 				}
-				xhttp.open("get",JSON.parse(response), true);
+				xhttp.open("get",responseParsed.location, true);
 				xhttp.send();
+			
 
-				var templateArray = JSON.parse(response).split('/');
+				var templateArray = responseParsed.location.split('/');
 				templateLocation = templateArray[templateArray.length-1];
-
+				templateID = responseParsed.id;
+				console.log(templateID);
 			}});
 
 		$(".savePage").click(function(){
@@ -233,7 +246,8 @@
 			data: {
 				template: page,
 				locationName: templateLocation,
-				name: location.hash.substring(1)
+				name: templateName,
+				templateID: templateID
 			},
 			type: 'post',
 			success: function(response){
@@ -241,7 +255,7 @@
 					console.log(JSON.parse(response));
 					downloadFile(JSON.parse(response).location);
 				} else {
-					window.open(JSON.parse(response),'_blank');
+					
 				}
 			}});
 		}

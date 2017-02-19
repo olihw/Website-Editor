@@ -9,11 +9,11 @@
 	<h2>Search</h2>
 	<div ng-app="myApp" ng-controller="retrieveTemplates">
 		<div class="contents">
-			<div ng-click="openAccordian()" class="page" ng-repeat="x in templates">
-				<div class="pageTitle">
+			<div class="page" ng-repeat="x in templates">
+				<div class="pageTitle" ng-click="openAccordian(x.templateName)">
 				<a href="webpageEditor.php#{{ x.templateName }}">{{ x.templateName }}</a>
 				</div>
-				<div class='accordian-content'>
+				<div class='accordian-content {{ x.templateName }}'>
 					<div ng-repeat="versions in x.templateVersions">
 						<a href="webpageEditor.php#{{ x.templateName }}||{{ versions.version }}">{{versions.version}}</a>
 					</div>
@@ -30,9 +30,11 @@
 		    	$scope.templates = response.data.templates;
 		    });
 
-		    $scope.openAccordian = function() {
-		    	this.find(".accordian-content").slideToggle();
+		    $scope.openAccordian = function(templateName) {
+		    	$(".accordian-content."+templateName).slideToggle();
 		    }
+
+
 		});
 
 

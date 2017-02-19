@@ -3,8 +3,8 @@
 	$query = mysqli_query($con, "Select * from templates"); // include company id
 	
 	$templates = "";
-	$count = 0;
 	while($row = mysqli_fetch_array($query)) {
+		$count = 0;
 		if($templates !="") {
 			$templates .= ",";
 		}
@@ -39,6 +39,6 @@
  
 
 	$templates = '{"templates":['.$templates.']}'; 
-	error_log($templates, 0);
+	// error_log($num_rows, 0);
 	echo $templates;
 ?>

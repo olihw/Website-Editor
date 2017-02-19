@@ -9,7 +9,7 @@
 	<h2>Search</h2>
 	<div ng-app="myApp" ng-controller="retrieveTemplates">
 		<div class="contents">
-			<div class="page" ng-repeat="x in templates">
+			<div class="page" data-id="{{x.templateName}}" ng-repeat="x in templates">
 				<div class="pageTitle" ng-click="openAccordian(x.templateName)">
 				<a href="webpageEditor.php#{{ x.templateName }}">{{ x.templateName }}</a>
 				</div>
@@ -18,6 +18,7 @@
 						<a href="webpageEditor.php#{{ x.templateName }}||{{ versions.version }}">{{versions.version}}</a>
 					</div>
 				</div>
+				<span  ng-click="deletePage(x.templateName)" class="deletePage">Delete</span>
 			</div>
 		</div>
 	</div>
@@ -34,6 +35,9 @@
 		    	$(".accordian-content."+templateName).slideToggle();
 		    }
 
+		    $scope.deletePage = function(templateName) {
+		    	$(".page[data-id='"+templateName+"']").remove();
+		    }
 
 		});
 

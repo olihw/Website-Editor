@@ -39,6 +39,34 @@
 		width: 300px;
 		margin: 0 auto;
 	}
+	.addComponent {
+		float: right;
+	}
+	.componentMenu {
+		display: none;
+		height: 100px;
+		width: 30%;
+		text-align: center;
+		position: fixed;
+		top: 40%;
+		background-color: white;
+		left: 35%;
+	}
+	.componentMenu button {
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+	.addNewComponentMenu {
+		display: none;
+		height: 100px;
+		width: 30%;
+		text-align: center;
+		position: fixed;
+		top: 40%;
+		background-color: white;
+		left: 35%;
+	}
 </style>
 <body>
 	<div id="htmlContainer" class="htmlContainer template"></div>
@@ -55,10 +83,25 @@
 	<button class="previewPage">Preview</button>
 	<button class="savePage">SAVE</button>
 	<button class="downloadPage">Download</button>
+	<button class="addComponent">Add component</button>
 	<div class="promptSave">
 		<p>Do you wish to save before you download?</p>
 		<button class="yesSave">Yes</button>
 		<button class="noSave">No</button>
+	</div>
+	<div class="componentMenu">
+		<button class="componentLibrary">Component Library</button>
+		<button class="addNewComponent">Add new Component</button>
+	</div>
+	<div class="addNewComponentMenu">
+		<form method="post" enctype="multipart/form-data" id="uploadComponent">
+			<input type="hidden" class="company" name="company" value="">
+			<input type="file" name="componentUploaded" id="componentUploaded">
+			</br>componentName: 
+			<input type="text" name="componentName" id="componentName">
+			</br>
+			<input type="submit" id="submit" name="submit" value="Upload component">
+		</form>
 	</div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -99,6 +142,7 @@
 				templateLocation = templateArray[templateArray.length-1];
 				templateID = responseParsed.id;
 				console.log(templateID);
+				$(".company").attr("value", window.frameElement.id.split(' ')[1]);
 			}});
 
 		$(".savePage").click(function(){
@@ -123,6 +167,28 @@
 			previewPages(1); 
 		});
 
+		$(".addComponent").click(function(){
+			$(".componentMenu").show();
+		});
+
+		$(".addNewComponent").click(function(){
+			$(".addNewComponentMenu").show();
+			$(".componentMenu").hide();
+		});
+
+		$("#uploadComponent").submit(function(e){
+			$.ajax({
+				url: 'uploadComponent.php',
+				type: 'POST',
+				data: new FormData(this),
+				processData: false,
+				contentType: false,
+				success: function(response) {
+					$(".addNewComponentMenu").hide();
+				}
+			});
+			e.preventDefault();
+		})
 
 		// function splitSections (html) {
 		// 	html = html.substring(1,html.length-1);
@@ -290,5 +356,18 @@
 				window.location.assign(JSON.parse(response));
 			}});
 		}
+
+		// function addComponent() {
+		// 	$.ajax({
+		// 	url: "retrieveComponents.php",
+		// 	data: {
+		// 		componentName: $('.componentName'). 
+		// 	},
+		// 	type: 'post',
+		// 	success: function(response){
+		// 		window.location.assign(JSON.parse(response));
+		// 	}});
+		// }
+
 	});
 </script>

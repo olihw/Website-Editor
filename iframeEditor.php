@@ -8,7 +8,7 @@
 	}
 	.editor {
 		display: none;
-	    position: absolute;
+	    position: fixed;
 	    width: 500px;
 	    margin: 10% 10%;
 	    top: 0;
@@ -67,6 +67,16 @@
 		background-color: white;
 		left: 35%;
 	}
+	.componentLibrary {
+		display: none;
+		height: 100px;
+		width: 30%;
+		text-align: center;
+		position: fixed;
+		top: 40%;
+		background-color: white;
+		left: 35%;
+	}
 </style>
 <body>
 	<div id="htmlContainer" class="htmlContainer template"></div>
@@ -90,7 +100,7 @@
 		<button class="noSave">No</button>
 	</div>
 	<div class="componentMenu">
-		<button class="componentLibrary">Component Library</button>
+		<button class="componentLibraryBtn">Component Library</button>
 		<button class="addNewComponent">Add new Component</button>
 	</div>
 	<div class="addNewComponentMenu">
@@ -103,9 +113,27 @@
 			<input type="submit" id="submit" name="submit" value="Upload component">
 		</form>
 	</div>
+	<div ng-app="myApp" ng-controller="retrieveComponents">
+		<div class="componentLibrary">
+			<div class="component" ng-repeat="x in component">
+				<p class="componentName">{{x.componentName}} <span>Preview</span> <span> Add</span></p>
+			</div>
+		</div>
+	</div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script type="text/javascript" src="plugins/Sortable.js"></script>
+<script>
+	var app = angular.module('myApp', []);
+	app.controller('retrieveComponents', function($scope, $http) {
+	    $http.get("retrieveComponents.php")
+	    .then(function (response) {
+	    	console.log(response);
+	    	$scope.component = response.data.components;
+	    });
+	});
+</script>
 <script>
 	$(document).ready(function() {
 		var templateLocation;
@@ -188,6 +216,11 @@
 				}
 			});
 			e.preventDefault();
+		})
+
+		$(".componentLibraryBtn").click(function() {
+			$(".componentLibrary").show();
+			$(".componentMenu").hide();
 		})
 
 		// function splitSections (html) {

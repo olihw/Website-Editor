@@ -7,7 +7,7 @@
 <body>
 <div class="search">
 	<h2>Search</h2>
-	<div ng-app="myApp" ng-controller="retrieveTemplates">
+	<div ng-app="myApp2" ng-controller="retrieveTemplates">
 		<div class="contents">
 			<div class="page" ng-repeat="x in templates">
 				<div class="pageTitle" ng-click="openAccordian(x.templateName)">
@@ -22,7 +22,7 @@
 		</div>
 	</div>
 	<script>
-		var app = angular.module('myApp', []);
+		var app = angular.module('myApp2', []);
 		app.controller('retrieveTemplates', function($scope, $http) {
 		    $http.get("searchTemplates.php")
 		    .then(function (response) {

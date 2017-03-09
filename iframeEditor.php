@@ -116,7 +116,7 @@
 	<div ng-app="myApp" ng-controller="retrieveComponents">
 		<div class="componentLibrary">
 			<div class="component" ng-repeat="x in component">
-				<p class="componentName">{{x.componentName}} <span>Preview</span> <span> Add</span></p>
+				<p class="componentName">{{x.componentName}} <span>Preview</span></p><p class="add" ng-click="addComponent(x.componentLocation)">Add</p>
 			</div>
 		</div>
 	</div>
@@ -132,6 +132,20 @@
 	    	console.log(response);
 	    	$scope.component = response.data.components;
 	    });
+
+	    $scope.addComponent = function(location) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					$("#htmlContainer").append(this.responseText);	
+					$("section:last").append('<div class="dragable"></div>');
+				}
+			}
+			xhttp.open("get",location, true);
+			xhttp.send();
+			$(".componentLibrary").hide();
+
+	    }
 	});
 </script>
 <script>
@@ -154,6 +168,7 @@
 			},
 			type: 'post',
 			success: function(response){
+				console.log(response);
 				var responseParsed = JSON.parse(response);
 				var xhttp = new XMLHttpRequest();
 				xhttp.onreadystatechange = function () {
@@ -222,7 +237,6 @@
 			$(".componentLibrary").show();
 			$(".componentMenu").hide();
 		})
-
 		// function splitSections (html) {
 		// 	html = html.substring(1,html.length-1);
 		// 	var elements = $(html);

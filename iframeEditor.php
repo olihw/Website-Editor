@@ -70,12 +70,26 @@
 	.componentLibrary {
 		display: none;
 		height: 100px;
-		width: 30%;
+		width: 350px;
 		text-align: center;
 		position: fixed;
 		top: 40%;
 		background-color: white;
 		left: 35%;
+		overflow-y: scroll;
+	}
+	.component {
+		margin: 0 20px;
+	}
+	.component .componentName {
+		text-align: left;
+		display: inline-block;
+		padding-right: 30px;
+	}
+
+	.component .add {
+		text-align: right;
+		display: inline-block;
 	}
 </style>
 <body>
@@ -124,30 +138,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script type="text/javascript" src="plugins/Sortable.js"></script>
-<script>
-	var app = angular.module('myApp', []);
-	app.controller('retrieveComponents', function($scope, $http) {
-	    $http.get("retrieveComponents.php")
-	    .then(function (response) {
-	    	console.log(response);
-	    	$scope.component = response.data.components;
-	    });
-
-	    $scope.addComponent = function(location) {
-			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function () {
-				if (this.readyState == 4 && this.status == 200) {
-					$("#htmlContainer").append(this.responseText);	
-					$("section:last").append('<div class="dragable"></div>');
-				}
-			}
-			xhttp.open("get",location, true);
-			xhttp.send();
-			$(".componentLibrary").hide();
-
-	    }
-	});
-</script>
 <script>
 	$(document).ready(function() {
 		var templateLocation;
@@ -417,4 +407,31 @@
 		// }
 
 	});
+
+var app = angular.module('myApp', []);
+	app.controller('retrieveComponents', function($scope, $http, $window) {
+	    $http.get("retrieveComponents.php")
+	    .then(function (response) {
+	    	console.log(response);
+	    	$scope.component = response.data.components;
+	    });
+
+	    $scope.addComponent = function(location) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					$("#htmlContainer").append(this.responseText);	
+					$("section:last").append('<div class="dragable"></div>');
+				}
+			}
+			xhttp.open("get",location, true);
+			xhttp.send();
+			$(".componentLibrary").hide();
+			afterLoad();
+
+	    }
+	});
+</script>
+<script>
+
 </script>

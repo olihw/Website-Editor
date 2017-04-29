@@ -13,7 +13,9 @@
 <script src="JS/main.js"></script>
 <link rel="stylesheet" href="css/main.css">
 <header>
-	<p class="company"><? echo $_SESSION['company'];?></p>
-	<p class="user">User: <? echo $_SESSION['user'];?></p>
-	<a class="logout" href="logout.php">Log out</a>
+	<ul class="header-information">
+			<li class="company"><? echo $_SESSION['company'];?></li>
+			<li class="user">User: <? echo $_SESSION['user'];?></li>
+			<li><a class="logout" href="logout.php">Log out</a></li>
+		</ul>
 </header>

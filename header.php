@@ -14,8 +14,14 @@
 <link rel="stylesheet" href="css/main.css">
 <header>
 	<ul class="header-information">
-			<li class="company"><? echo $_SESSION['company'];?></li>
-			<li class="user">User: <? echo $_SESSION['user'];?></li>
-			<li><a class="logout" href="logout.php">Log out</a></li>
-		</ul>
+		<li class="company"><? echo $_SESSION['company'];?></li>
+		<li class="user">User: <? echo $_SESSION['user'];?></li>
+		<li><a class="logout" href="logout.php">Log out</a></li>
+	</ul>
+	<ul class="navigation">
+		<li class="navigation-tab">Search</li>
+		<li class="navigation-tab">Upload Template</li>
+		<li class="navigation-tab">Upload Component</li>
+		<li class="navigation-tab">User Guide</li>
+	</ul>
 </header>

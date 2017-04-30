@@ -6,12 +6,13 @@
 </script>
 <body>
 <div class="search">
-	<h2>Search</h2>
 	<div ng-app="myApp2" ng-controller="retrieveTemplates">
 		<div class="contents">
 			<div class="page" ng-repeat="x in templates">
 				<div class="pageTitle" ng-click="openAccordian(x.templateName)">
 				<a href="webpageEditor.php#{{ x.templateName }}">{{ x.templateName }}</a>
+				<i class="down-arrow"></i>
+				<i class="up-arrow"></i>
 				</div>
 				<div class='accordian-content {{ x.templateName }}'>
 					<div ng-repeat="versions in x.templateVersions">

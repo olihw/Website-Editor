@@ -1,7 +1,7 @@
 <title>Webpage Editor</title>
 <style type="text/css">
 	.htmlContainer section {
-		border: dashed; 1px;
+		border: dashed 1px;
 		border-color: black;
 		margin: 5px;
 		position: relative;
@@ -10,15 +10,52 @@
 		display: none;
 	    position: fixed;
 	    width: 500px;
-	    margin: 10% 10%;
-	    top: 0;
+	    margin: 0 auto;
+	    top: 20%;
+	    right: 0;
 	    left: 0;
 	    background-color: #FFF;
-	    height: 300px;
+	    height: 450px;
+	    text-align: center;
+	}
+	.editor button {
+		width: 48%;
+		border: none;
+    	background-color: white;
+    	height: 40px;
+	}
+	.text-modifying {
+		float: right;
+		width: 30%;
 	}
 	.text-input {
-		width: 100%;
-		height: 100%;
+		float:left;
+		width: 70%;
+		height: 86%;
+	}
+	.size-container, .alignment-container, .colour-container {
+		border: solid 1px;
+		margin-left: 4px;
+	}
+	.size-container {
+		border-bottom: none;
+	}
+	.alignment-container button {
+		width: 31%;
+	}
+	.alignment-container button i span {
+	    width: 25px;
+	    height: 2px;
+	    background-color: black;
+	    margin: 6px 0;
+	    display: block;
+	}
+	.alignment-container .left span:first-child, .alignment-container .left span:last-child {
+		width: 20px;
+	}
+	.alignment-container .right span:first-child, .alignment-container .right span:last-child {
+		width: 20px;
+		margin-left: 5px;
 	}
 	.dragable {
 		position: absolute;
@@ -91,17 +128,105 @@
 		text-align: right;
 		display: inline-block;
 	}
+	.down-arrow {
+		transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+	}
+	.up-arrow {
+		transform: rotate(-135deg);
+	    -webkit-transform: rotate(-135deg);
+	    margin-bottom: -5px;
+	}
+	.size-container button i {
+		border: solid black;
+		border-width: 0 3px 3px 0;
+		padding: 3px;
+		display: inline-block;
+	}
+	.font-size-title, .currentFontSize {
+		display: inline-block;
+	}
+	.red {
+		background-color: red;
+	}
+	.blue {
+		background-color: blue;
+	}
+	.yellow {
+		background-color: yellow;
+	}
+	.green {
+		background-color: green;
+	}
+	.black {
+		background-color: black;
+	}
+	.white {
+		background-color: white;
+	}
+	.purple {
+		background-color: purple;
+	}
+	.grey {
+		background-color: grey;
+	}
+	.orange {
+		background-color: orange;
+	}
+	.overlay {
+		background-color: rgba(0,0,0,0.5);
+	}
+	.hexadecimal-input {
+		width: 100%;
+	}
+	.colour-swatches span {
+		width: 20px;
+		height: 20px;
+		display: inline-block;
+	}
+	.close-editor {
+	    font-style: normal;
+	    float: right;
+	    margin: 10px;
+	    cursor: pointer;
+	}
+
 </style>
 <body>
 	<div id="htmlContainer" class="htmlContainer template"></div>
 	<div class="editor">
+		<i class="close-editor">X</i>
 		<p>Text editor</p>
-		<button class='textSizeUp'>Font up</button>
-		<button class='textSizeDown'>Font down</button>
-		<button class="left">Left</button>
-		<button class="center">center</button>
-		<button class="right">right</button>
-		<p class=currentFontSize></p>
+		<div class="text-modifying">
+			<div class="size-container">
+				<p class="font-size-title">Font Size: </p><p class="currentFontSize"></p>
+				<button class='textSizeUp'><i class="up-arrow"></i></button>
+				<button class='textSizeDown'><i class="down-arrow"></i></button>
+			</div>
+			<div class="alignment-container">
+				<p>Font Alignment</p>
+				<button class="left"><i><span></span><span></span><span></span></i></button>
+				<button class="center"><i><span></span><span></span><span></span></i></button>
+				<button class="right"><i><span></span><span></span><span></span></i></button>
+			</div>
+			<div class="colour-container">
+				<p>Font Colour</p>
+				<div class="colour-swatches">
+				<span class="red"></span>
+				<span class="purple"></span>	
+				<span class="blue"></span>	
+				<span class="orange"></span>	
+				<span class="green"></span>	
+				<span class="yellow"></span>	
+				<span class="white"></span>	
+				<span class="grey"></span>
+				<span class="black"></span>
+				</div>
+				<p class="hexadecimal-colour">Hexadecimal:</p>
+				<input type="text" class="hexadecimal-input">
+				<button class="colour-change">Apply</button>
+			</div>
+		</div>
 		<textarea  class="text-input"></textarea>
 	</div>
 	<button class="previewPage">Preview</button>
@@ -227,6 +352,7 @@
 			$(".componentLibrary").show();
 			$(".componentMenu").hide();
 		})
+
 		// function splitSections (html) {
 		// 	html = html.substring(1,html.length-1);
 		// 	var elements = $(html);
@@ -270,6 +396,7 @@
 					} else {
 						$(currentComponent).text($(".text-input").val());
 						$(".editor").hide();
+						$("body").removeClass("overlay");
 						unbindEditor();
 					}
 				}
@@ -283,6 +410,9 @@
 			$(".left").unbind('click');
 			$(".center").unbind('click');
 			$(".right").unbind('click');
+			$(".colour-change").unbind('click');
+			$(".colour-swatches span").unbind('click');
+			textEditBind();
 		}
 
 		function fontSize(currentComponent, up) {
@@ -306,9 +436,14 @@
 				animation: 150
 			});
 			//$("#htmlContainer").append('<button class="preview">Preview</button>')
+			textEditBind();
+		}
+
+		function textEditBind() {
 			$("h1, span").bind('click',function(event){
 				event.stopPropagation();
-
+				$("h1, span").unbind('click');
+				$("body").addClass("overlay");
 				var currentComponent = $(this);
 				console.log(currentComponent);
 				var currentText = $(this).text();
@@ -338,7 +473,41 @@
 					currentComponent.css('text-align', 'right');
 				});
 
+				$(".colour-change").bind('click', function() {
+					var hexa = $(".hexadecimal-input").val();
+					hexa = "#"+hexa;
+					//error check needs to be added, regex and either 3 or 6 characters
+
+					//changes colour of text
+					currentComponent.css("color", hexa);
+
+					//adds swatch to the list
+					$(".colour-swatches").append("<span style='background-color:"+hexa+";'></span>");
+
+					colourSwatch(currentComponent);
+
+				});
+
+				$(".close-editor").click(function() {
+					if($(".text-input").val() == '') {
+
+					} else {
+						$(currentComponent).text($(".text-input").val());
+						$(".editor").hide();
+						$("body").removeClass("overlay");
+						unbindEditor();
+					}
+				})
+
+				colourSwatch(currentComponent);
+
 				keypress(currentComponent);
+			});
+		}
+
+		function colourSwatch(currentComponent) {
+			$(".colour-swatches span").bind('click', function() {
+				currentComponent.css("color", $(this).css("background-color"));
 			});
 		}
 

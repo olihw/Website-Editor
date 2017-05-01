@@ -80,3 +80,7 @@ i {
     display: none;
     margin-top: 6px;
 }
+
+header {
+	padding-bottom: 10px;
+}

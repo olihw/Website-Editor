@@ -3,6 +3,7 @@
 	$templatelocation = $_POST['locationName'];
 
 	$template = str_replace('<div class="dragable"></div>', "", $template);
+
 	// if(!is_dir("temp/".$templateName)) {
  //    	mkdir("temp/".$templateName); // add company into this as well
 	// }

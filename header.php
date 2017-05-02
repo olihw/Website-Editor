@@ -19,8 +19,8 @@
 		<li><a class="logout" href="logout.php">Log out</a></li>
 	</ul>
 	<ul class="navigation">
-		<li class="navigation-tab">Search</li>
-		<li class="navigation-tab">Upload Template</li>
+		<li class="navigation-tab"><a href="search.php">Search</a></li>
+		<li class="navigation-tab"><a href="uploadTemplatePage.php">Upload Template</a></li>
 		<li class="navigation-tab">Upload Component</li>
 		<li class="navigation-tab">User Guide</li>
 	</ul>

@@ -1,4 +1,4 @@
-header{width:100%;height:100px}header .company{text-align:center;display:inline-block}header .user{padding-right:20px;display:inline-block}header .logout{float:right;padding-right:20px;display:inline-block}header p{margin:0}.upload{border:solid 1px;position:absolute;bottom:0;width:97%}.accordian-content{display:none}.page{display:block}.pageTitle{padding:10px 0;display:block}.pageTitle a{color:black;text-decoration:none;font-size:22px}
+header{width:100%;height:100px}header .company{text-align:center;display:inline-block}header .user{padding-right:20px;display:inline-block}header .logout{float:right;padding-right:20px;display:inline-block}header p{margin:0}.accordian-content{display:none}.page{display:block}.pageTitle{padding:10px 0;display:block}.pageTitle a{color:black;text-decoration:none;font-size:22px}
 .navigation {
 		list-style: none;
 		text-align: center;
@@ -9,8 +9,11 @@ header{width:100%;height:100px}header .company{text-align:center;display:inline-
 	display: inline;
 	margin-left: 40px;
 }
-
-.navigation-tab:first-child {
+.navigation-tab a {
+	text-decoration: none;
+	color: black;
+}
+.navigation-tab.active {
 	border-bottom: solid 2px;
 }
 
@@ -39,11 +42,6 @@ header{width:100%;height:100px}header .company{text-align:center;display:inline-
 
 .search {
 	padding: 100px 40px;
-}
-
-
-.upload {
-	display: none;
 }
 
 .page {
@@ -83,4 +81,46 @@ i {
 
 header {
 	padding-bottom: 10px;
+}
+
+.upload {
+	text-align: center;
+	margin-top: 50px;
+}
+
+.upload p {
+	display: inline-block;
+}
+
+#templateUploaded {
+	display: block;
+	margin: 0 auto;
+}
+
+.upload input {
+	margin-bottom: 20px;
+}
+
+.upload .submit {
+	margin-top: 20px;
+}
+
+.filter {
+	text-align: center;
+    padding-bottom: 70px;
+}
+
+.filter p {
+	display: inline-block;
+	margin-left: 10px;
+}
+
+.filter button {
+	display: block;
+    margin: 0 auto;
+    background-color: white;
+    font-weight: bold;
+    font-size: 14px;
+    border: solid 1px;
+    padding: 10px 20px;
 }

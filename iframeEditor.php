@@ -11,7 +11,7 @@
 	    position: fixed;
 	    width: 500px;
 	    margin: 0 auto;
-	    top: 20%;
+	    top: 10%;
 	    right: 0;
 	    left: 0;
 	    background-color: #FFF;
@@ -191,6 +191,16 @@
 	    cursor: pointer;
 	}
 
+	.htmlContainer a {
+		pointer-events: none;
+	}
+
+	.dz-default {
+    	z-index: 10;
+    	width: 150px;
+    	height: 50px;
+	}
+
 </style>
 <body>
 	<div id="htmlContainer" class="htmlContainer template"></div>
@@ -263,6 +273,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script type="text/javascript" src="plugins/Sortable.js"></script>
+<script type="text/javascript" src="plugins/dropzone.js"></script>
 <script>
 	$(document).ready(function() {
 		var templateLocation;
@@ -334,6 +345,10 @@
 			$(".componentMenu").hide();
 		});
 
+		$("a").click(function() {
+			console.log("click");
+		});
+
 		$("#uploadComponent").submit(function(e){
 			$.ajax({
 				url: 'uploadComponent.php',
@@ -352,40 +367,6 @@
 			$(".componentLibrary").show();
 			$(".componentMenu").hide();
 		})
-
-		// function splitSections (html) {
-		// 	html = html.substring(1,html.length-1);
-		// 	var elements = $(html);
-		// 	var sections = [];
-		// 	for(i=0;i<elements.length;i++) {
-		// 		if(elements[i].tagName == "SECTION") {
-		// 			sections.push(elements[i]);
-		// 		}
-		// 	}
-		// 	return sections;
-		// }
-
-		// function getStyles (html) {
-		// 	html = html.substring(1,html.length-1);
-		// 	var elements = $(html);
-		// 	for(i=0;i<elements.length;i++) {
-		// 		if(elements[i].tagName == "STYLE") {
-		// 			return "<style type='text/css'>" + addContainer(elements[i].innerHTML) + "</style>";
-		// 		}
-		// 	}
-		// }
-
-		// function addContainer (styles) {
-		// 	var css = styles.split('}');
-		// 	for(var style in css) {
-		// 		if(css[style] == ""){
-
-		// 		} else {
-		// 			css[style] = ".htmlContainer.template "+css[style]+"} ";
-		// 		}
-		// 	}
-		// 	return css.join().replace(/,/g,'');
-		// }
 
 		function keypress (currentComponent) {
 			$(".text-input").keypress(function(e){
@@ -430,17 +411,37 @@
 
 		function afterLoad() {
 			var container = document.getElementById('htmlContainer');
-			$('section').append('<div class="dragable"></div>')
+			$('section').append('<div class="dragable"></div>');
 			var sortable = Sortable.create(container,{
 				handle: ".dragable",
 				animation: 150
 			});
+
+			$("img").wrap("<div class='dropzone'></div>");
+
+			$("#htmlContainer .dropzone").dropzone({ 
+				url: "imageUpload.php",
+				uploadMultiple: false,
+				maxFilesize: 2,
+				sending: function(file, xhr, formData) {
+					formData.append('templateName', templateName);
+					formData.append('versionNumber', versionNumber);
+				},
+				success: function() {
+					var newSrc = $(this)[0].files[0].name;
+					var currentSrc = $($(this)[0].element.innerHTML)[0].currentSrc;
+					$("img[src$='"+currentSrc+"']").attr('src', newSrc);
+				}
+			});
+
+			$(".dropzone .dz-default span").text("Click here to Upload Image");
+			//var myDropzone = new Dropzone($("#htmlContainer .dropzone"), { url: "/Uploads/"+templateName});
 			//$("#htmlContainer").append('<button class="preview">Preview</button>')
 			textEditBind();
 		}
 
 		function textEditBind() {
-			$("h1, span").bind('click',function(event){
+			$("h1, span:not(.dz-default span), p, h2, h3, h4, h5, h6").bind('click',function(event){
 				event.stopPropagation();
 				$("h1, span").unbind('click');
 				$("body").addClass("overlay");
@@ -591,6 +592,7 @@ var app = angular.module('myApp', []);
 				if (this.readyState == 4 && this.status == 200) {
 					$("#htmlContainer").append(this.responseText);	
 					$("section:last").append('<div class="dragable"></div>');
+					textEditBind();
 				}
 			}
 			xhttp.open("get",location, true);
@@ -599,6 +601,133 @@ var app = angular.module('myApp', []);
 			afterLoad();
 
 	    }
+
+	    function keypress (currentComponent) {
+			$(".text-input").keypress(function(e){
+				e.stopPropagation();
+				if(e.keyCode == '13') {
+					if($(".text-input").val() == '') {
+
+					} else {
+						$(currentComponent).text($(".text-input").val());
+						$(".editor").hide();
+						$("body").removeClass("overlay");
+						unbindEditor();
+					}
+				}
+			});
+		}
+
+		function unbindEditor () {
+			$(".text-input").unbind('keypress');
+			$(".textSizeDown").unbind('click');
+			$(".textSizeUp").unbind('click');
+			$(".left").unbind('click');
+			$(".center").unbind('click');
+			$(".right").unbind('click');
+			$(".colour-change").unbind('click');
+			$(".colour-swatches span").unbind('click');
+			textEditBind();
+		}
+
+		function fontSize(currentComponent, up) {
+			var currentFontSize = currentComponent.css('font-size');
+			var adjustment = parseInt(currentFontSize.split('px')[0])-1+'px'
+			
+			if(up) {
+				adjustment = parseInt(currentFontSize.split('px')[0])+1+'px'
+			}
+			
+			currentComponent.css('font-size', adjustment);
+			currentFontSize = adjustment;
+			$(".currentFontSize").text(currentFontSize);
+		}
+
+		function afterLoad() {
+			var container = document.getElementById('htmlContainer');
+			$('section').append('<div class="dragable"></div>');
+			var sortable = Sortable.create(container,{
+				handle: ".dragable",
+				animation: 150
+			});
+
+			//$("#htmlContainer img").dropzone({ url: "/Uploads/"+templateName });
+			//var myDropzone = new Dropzone("div#myId", { url: "/file/post"});
+			//$("#htmlContainer").append('<button class="preview">Preview</button>')
+			textEditBind();
+		}
+
+		function textEditBind() {
+			$("h1, span, p, h2, h3, h4, h5, h6").bind('click',function(event){
+				event.stopPropagation();
+				$("h1, span").unbind('click');
+				$("body").addClass("overlay");
+				var currentComponent = $(this);
+				console.log(currentComponent);
+				var currentText = $(this).text();
+				var currentFontSize = currentComponent.css('font-size');
+				$(".text-input").val("");	
+				$(".text-input").val(currentText);
+				$(".currentFontSize").text(currentFontSize);				
+				$(".editor").show();
+
+				$('.textSizeDown').bind('click', function(){
+					fontSize(currentComponent, false);
+				});
+
+				$('.textSizeUp').bind('click', function(){
+					fontSize(currentComponent, true);
+				});
+
+				$('.left').bind('click', function(){
+					currentComponent.css('text-align', 'left');
+				});
+
+				$('.center').bind('click', function(){
+					currentComponent.css('text-align', 'center');
+				});
+
+				$('.right').bind('click', function(){
+					currentComponent.css('text-align', 'right');
+				});
+
+				$(".colour-change").bind('click', function() {
+					var hexa = $(".hexadecimal-input").val();
+					hexa = "#"+hexa;
+					//error check needs to be added, regex and either 3 or 6 characters
+
+					//changes colour of text
+					currentComponent.css("color", hexa);
+
+					//adds swatch to the list
+					$(".colour-swatches").append("<span style='background-color:"+hexa+";'></span>");
+
+					colourSwatch(currentComponent);
+
+				});
+
+				$(".close-editor").click(function() {
+					if($(".text-input").val() == '') {
+
+					} else {
+						$(currentComponent).text($(".text-input").val());
+						$(".editor").hide();
+						$("body").removeClass("overlay");
+						unbindEditor();
+					}
+				})
+
+				colourSwatch(currentComponent);
+
+				keypress(currentComponent);
+			});
+		}
+
+		function colourSwatch(currentComponent) {
+			$(".colour-swatches span").bind('click', function() {
+				currentComponent.css("color", $(this).css("background-color"));
+			});
+		}
 	});
 </script>
 <script>

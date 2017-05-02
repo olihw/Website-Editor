@@ -3,12 +3,21 @@
 ?>
 <title>Search</title>
 <script>
+$(".navigation-tab").removeClass("active");
+$(".navigation-tab").eq(0).addClass("active");
 </script>
 <body>
 <div class="search">
 	<div ng-app="myApp2" ng-controller="retrieveTemplates">
 		<div class="contents">
-			<div class="page" data-id="{{x.templateName}}" ng-repeat="x in templates">
+			<div class="filter">
+				<p>Select a Template Name:</p> 
+				<select ng-model="filterName" ng-options="x.templateName for x in templates">
+					<option value="{{x.templateName}}">{{x.templateName}}</option>
+				</select>
+				<button ng-click="clearFilter()">Clear Filter</button>
+			</div>
+			<div class="page" data-id="{{x.templateName}}" ng-repeat="x in templates | filter : {templateName: filterName.templateName}: true">
 				<div class="pageTitle" ng-click="openAccordian(x.templateName)">
 				<a href="webpageEditor.php#{{ x.templateName }}">{{ x.templateName }}</a>
 				<i class="down-arrow"></i>
@@ -30,28 +39,27 @@
 		    .then(function (response) {
 		    	console.log(response);
 		    	$scope.templates = response.data.templates;
+
 		    });
 
 		    $scope.openAccordian = function(templateName) {
 		    	$(".accordian-content."+templateName).slideToggle();
+		    	$(".page[data-id='"+templateName+"'] .down-arrow").toggle();
+				$(".page[data-id='"+templateName+"'] .up-arrow").toggle();
 		    }
 
 		    $scope.deletePage = function(templateName) {
 		    	$(".page[data-id='"+templateName+"']").remove();
 		    }
 
+		    $scope.clearFilter = function() {
+		    	$scope.filterName = {};
+		    }
+
 		});
 
 
 	</script>
-</div>
-<div class="upload">
-	<h2>Upload Template</h2>
-	<form action="uploadTemplate.php" method="post" enctype="multipart/form-data">
-		<input type="file" name="templateUploaded" id="templateUploaded">
-		</br>TemplateName: <input type="text" name="templateName" id="templateName">
-		</br><input type="submit" name="submit" value="Upload Template">
-	</form>
 </div>
 </body>
 </html> 

@@ -15,17 +15,24 @@ $(".navigation-tab").eq(0).addClass("active");
 				<select ng-model="filterName" ng-options="x.templateName for x in templates">
 					<option value="{{x.templateName}}">{{x.templateName}}</option>
 				</select>
+				<p>Enter a Version Name:</p>
+				<input type="text">
 				<button ng-click="clearFilter()">Clear Filter</button>
 			</div>
 			<div class="page" data-id="{{x.templateName}}" ng-repeat="x in templates | filter : {templateName: filterName.templateName}: true">
 				<div class="pageTitle" ng-click="openAccordian(x.templateName)">
-				<a href="webpageEditor.php#{{ x.templateName }}">{{ x.templateName }}</a>
+				<p class="templateTitle">{{x.templateName}}</p>
 				<i class="down-arrow"></i>
 				<i class="up-arrow"></i>
 				</div>
 				<div class='accordian-content {{ x.templateName }}'>
+					<a href="webpageEditor.php#{{ x.templateName }}"><p>1</p><p>Inital Upload</p></a>
 					<div ng-repeat="versions in x.templateVersions">
-						<a href="webpageEditor.php#{{ x.templateName }}||{{ versions.version }}">{{versions.version}}</a>
+						<a href="webpageEditor.php#{{ x.templateName }}||{{ versions.version }}">
+							<p>{{versions.version}}</p>
+							<p>{{versions.name}}</p>
+							<p>{{versions.date}}</p>
+						</a>
 					</div>
 				</div>
 				<span  ng-click="deletePage(x.templateName)" class="deletePage">Delete</span>

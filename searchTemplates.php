@@ -27,12 +27,12 @@
 			
 			if($count == $num_rows) {
 				$templates .= '{"version":'.$row2['Version Number'].',';
-				$templates .= '"location":"'.$versionlocation.'"}';
+				$templates .= '"location":"'.$versionlocation.'", "name":"'.$row2['Version name'].'", "date":"'.$row2['Date/Time'].'"}';
 				$templates .= ']}';
 			}
 			else {
 				$templates .= '{"version":'.$row2['Version Number'].',';
-				$templates .= '"location":"'.$versionlocation.'"},';
+				$templates .= '"location":"'.$versionlocation.'", "name":"'.$row2['Version name'].'", "date":"'.$row2['Date/Time'].'"},';
 			}
 		}
 	}

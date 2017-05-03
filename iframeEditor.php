@@ -17,6 +17,7 @@
 	    background-color: #FFF;
 	    height: 450px;
 	    text-align: center;
+	    z-index: 100;
 	}
 	.editor button {
 		width: 48%;
@@ -175,6 +176,7 @@
 	}
 	.overlay {
 		background-color: rgba(0,0,0,0.5);
+		z-index: 90;
 	}
 	.hexadecimal-input {
 		width: 100%;
@@ -198,7 +200,44 @@
 	.dz-default {
     	z-index: 10;
     	width: 150px;
-    	height: 50px;
+    	height: 38px;
+    	position: absolute;
+    	top: 0;
+    	right: 0;
+    	background-color: white;
+    	text-align: center;
+    	border: solid 1px;
+	}
+
+	.dz-preview {
+		display: none;
+	}
+
+	.dropzone {
+		display: inline-block;
+		position: relative;
+	}
+
+	.versionNameText {
+		display: inline-block;
+	}
+
+	.saveErrorMessage {
+		color: red;
+		display: none;
+	}
+
+	.delete-section {
+		position: absolute;
+	    right: 0;
+	    top: 0;
+	    margin: 10px;
+	}
+
+	.savePage, .downloadPage, .previewPage, .addComponent {
+		border: solid 1px;
+		background-color: white;
+		padding: 10px 20px;
 	}
 
 </style>
@@ -239,7 +278,10 @@
 		</div>
 		<textarea  class="text-input"></textarea>
 	</div>
+	<p class="saveErrorMessage">Please enter a Version name</p>
 	<button class="previewPage">Preview</button>
+	<p class="versionNameText">Version Name: </p>
+	<input class="versionName" type="text">
 	<button class="savePage">SAVE</button>
 	<button class="downloadPage">Download</button>
 	<button class="addComponent">Add component</button>
@@ -265,7 +307,7 @@
 	<div ng-app="myApp" ng-controller="retrieveComponents">
 		<div class="componentLibrary">
 			<div class="component" ng-repeat="x in component">
-				<p class="componentName">{{x.componentName}} <span>Preview</span></p><p class="add" ng-click="addComponent(x.componentLocation)">Add</p>
+				<p class="componentName">{{x.componentName}}</p><button class="add" ng-click="addComponent(x.componentLocation)">Add</button>
 			</div>
 		</div>
 	</div>
@@ -315,7 +357,13 @@
 			}});
 
 		$(".savePage").click(function(){
-			savePages();
+			var versionName = $(".versionName").val();
+			if(versionName == "") {
+				$(".saveErrorMessage").show();
+			} else {
+				$(".saveErrorMessage").hide();
+				savePages();
+			}
 		});
 
 		$(".previewPage").click(function(){
@@ -338,6 +386,7 @@
 
 		$(".addComponent").click(function(){
 			$(".componentMenu").show();
+			unbindEditor();
 		});
 
 		$(".addNewComponent").click(function(){
@@ -345,9 +394,6 @@
 			$(".componentMenu").hide();
 		});
 
-		$("a").click(function() {
-			console.log("click");
-		});
 
 		$("#uploadComponent").submit(function(e){
 			$.ajax({
@@ -358,6 +404,7 @@
 				contentType: false,
 				success: function(response) {
 					$(".addNewComponentMenu").hide();
+					textEditBind();
 				}
 			});
 			e.preventDefault();
@@ -412,13 +459,18 @@
 		function afterLoad() {
 			var container = document.getElementById('htmlContainer');
 			$('section').append('<div class="dragable"></div>');
+			$('section').append('<i class="delete-section">X</i>');
 			var sortable = Sortable.create(container,{
 				handle: ".dragable",
 				animation: 150
 			});
 
-			$("img").wrap("<div class='dropzone'></div>");
+			imageDropzone();
+			textEditBind();
+		}
 
+		function imageDropzone() {
+			$("img").wrap("<div class='dropzone'></div>");
 			$("#htmlContainer .dropzone").dropzone({ 
 				url: "imageUpload.php",
 				uploadMultiple: false,
@@ -430,14 +482,28 @@
 				success: function() {
 					var newSrc = $(this)[0].files[0].name;
 					var currentSrc = $($(this)[0].element.innerHTML)[0].currentSrc;
-					$("img[src$='"+currentSrc+"']").attr('src', newSrc);
-				}
-			});
+					if(versionNumber == 1) {
+						$("img[src$='"+currentSrc+"']").attr('src', "Uploads/"+templateName+"/"+newSrc);
+
+					} else {
+						$("img[src$='"+currentSrc+"']").attr('src', "Uploads/"+templateName+"/"+versionNumber+"/"+newSrc);
+						
+					}
+
+					setTimeout(function(){
+						$(".dropzone").each(function() {
+							var height = $(this).find("img").height();
+							var width = $(this).find("img").width();
+							console.log(height);
+							console.log(width);
+							$(this).css("height", height+"px");
+							$(this).css("width", width+"px");
+						});
+					},1000);
+						}
+					});
 
 			$(".dropzone .dz-default span").text("Click here to Upload Image");
-			//var myDropzone = new Dropzone($("#htmlContainer .dropzone"), { url: "/Uploads/"+templateName});
-			//$("#htmlContainer").append('<button class="preview">Preview</button>')
-			textEditBind();
 		}
 
 		function textEditBind() {
@@ -513,6 +579,7 @@
 		}
 
 		function savePages(downloadable) {
+			$("img").unwrap();
 			var page = $(".htmlContainer")[0].innerHTML;
 			$.ajax({
 			url: "saveTemplates.php",
@@ -520,7 +587,8 @@
 				template: page,
 				locationName: templateLocation,
 				name: templateName,
-				templateID: templateID
+				templateID: templateID,
+				versionName: $(".versionName").val()
 			},
 			type: 'post',
 			success: function(response){
@@ -530,6 +598,7 @@
 				} else {
 					
 				}
+				$("img").wrap("<div class='dropzone'></div>");
 			}});
 		}
 
@@ -588,11 +657,14 @@ var app = angular.module('myApp', []);
 
 	    $scope.addComponent = function(location) {
 			var xhttp = new XMLHttpRequest();
+			$("img").unwrap();
+			$(".dz-default").remove();
 			xhttp.onreadystatechange = function () {
 				if (this.readyState == 4 && this.status == 200) {
 					$("#htmlContainer").append(this.responseText);	
 					$("section:last").append('<div class="dragable"></div>');
 					textEditBind();
+					imageDropzone();
 				}
 			}
 			xhttp.open("get",location, true);
@@ -651,9 +723,6 @@ var app = angular.module('myApp', []);
 				animation: 150
 			});
 
-			//$("#htmlContainer img").dropzone({ url: "/Uploads/"+templateName });
-			//var myDropzone = new Dropzone("div#myId", { url: "/file/post"});
-			//$("#htmlContainer").append('<button class="preview">Preview</button>')
 			textEditBind();
 		}
 
@@ -727,6 +796,43 @@ var app = angular.module('myApp', []);
 			$(".colour-swatches span").bind('click', function() {
 				currentComponent.css("color", $(this).css("background-color"));
 			});
+		}
+
+		function imageDropzone() {
+			$("img").wrap("<div class='dropzone'></div>");
+			$("#htmlContainer .dropzone").dropzone({ 
+				url: "imageUpload.php",
+				uploadMultiple: false,
+				maxFilesize: 2,
+				sending: function(file, xhr, formData) {
+					formData.append('templateName', templateName);
+					formData.append('versionNumber', versionNumber);
+				},
+				success: function() {
+					var newSrc = $(this)[0].files[0].name;
+					var currentSrc = $($(this)[0].element.innerHTML)[0].currentSrc;
+					if(versionNumber == 1) {
+						$("img[src$='"+currentSrc+"']").attr('src', "Uploads/"+templateName+"/"+newSrc);
+
+					} else {
+						$("img[src$='"+currentSrc+"']").attr('src', "Uploads/"+templateName+"/"+versionNumber+"/"+newSrc);
+						
+					}
+
+					setTimeout(function(){
+						$(".dropzone").each(function() {
+							var height = $(this).find("img").height();
+							var width = $(this).find("img").width();
+							console.log(height);
+							console.log(width);
+							$(this).css("height", height+"px");
+							$(this).css("width", width+"px");
+						});
+					},1000);
+						}
+					});
+
+			$(".dropzone .dz-default span").text("Click here to Upload Image");
 		}
 	});
 </script>

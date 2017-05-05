@@ -1,5 +1,5 @@
 <?php
-	$con = mysqli_connect("localhost", "root", "root", "c452project")or die(mysql_error());
+	$con = mysqli_connect("localhost", "maoh3", "9P1SYmEK4I", "c452project")or die(mysql_error());
 	$query = mysqli_query($con, "Select * from templates"); // include company id
 	
 	$templates = "";
@@ -27,12 +27,12 @@
 			
 			if($count == $num_rows) {
 				$templates .= '{"version":'.$row2['Version Number'].',';
-				$templates .= '"location":"'.$versionlocation.'", "name":"'.$row2['Version name'].'", "date":"'.$row2['Date/Time'].'"}';
+				$templates .= '"location":"'.$versionlocation.'", "name":"'.$row2['Version Name'].'", "date":"'.$row2['Date/Time'].'"}';
 				$templates .= ']}';
 			}
 			else {
 				$templates .= '{"version":'.$row2['Version Number'].',';
-				$templates .= '"location":"'.$versionlocation.'", "name":"'.$row2['Version name'].'", "date":"'.$row2['Date/Time'].'"},';
+				$templates .= '"location":"'.$versionlocation.'", "name":"'.$row2['Version Name'].'", "date":"'.$row2['Date/Time'].'"},';
 			}
 		}
 	}

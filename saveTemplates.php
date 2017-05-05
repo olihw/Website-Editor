@@ -7,7 +7,7 @@
 	$date = date('Y-m-d H:i:s');
 	$versionNumber = 2;
 
-	$con = mysqli_connect("localhost", "root", "root")or die(mysql_error());
+	$con = mysqli_connect("localhost", "maoh3", "9P1SYmEK4I")or die(mysql_error());
 	mysqli_select_db($con ,"c452project")or die("Cannot connect to database");
 	
 	$query = mysqli_query($con, "Select * from templateversion WHERE `TemplateID` = '".$templateID."' ORDER BY `Date/Time` DESC LIMIT 1");

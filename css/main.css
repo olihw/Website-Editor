@@ -92,11 +92,15 @@ header {
 	display: inline-block;
 }
 
-#templateUploaded {
+#templateUploaded, #componentUploaded {
 	display: block;
 	margin: 0 auto;
 }
 
+.upload input[type="file"] {
+	display: block;
+	margin: 0 auto;
+}
 .upload input {
 	margin-bottom: 20px;
 }
@@ -135,4 +139,10 @@ header {
 	display: inline-block;
 	margin-left: 10px;
 	width: 150px;
+
+}
+.submit { 
+	border: solid 1px;
+    background-color: white;
+    padding: 5px 10px;
 }

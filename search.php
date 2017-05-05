@@ -15,8 +15,8 @@ $(".navigation-tab").eq(0).addClass("active");
 				<select ng-model="filterName" ng-options="x.templateName for x in templates">
 					<option value="{{x.templateName}}">{{x.templateName}}</option>
 				</select>
-				<p>Enter a Version Name:</p>
-				<input type="text">
+				<p style="display:none;">Enter a Version Name:</p>
+				<input style="display:none;" type="text">
 				<button ng-click="clearFilter()">Clear Filter</button>
 			</div>
 			<div class="page" data-id="{{x.templateName}}" ng-repeat="x in templates | filter : {templateName: filterName.templateName}: true">

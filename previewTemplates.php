@@ -3,7 +3,8 @@
 	$templatelocation = $_POST['locationName'];
 
 	$template = str_replace('<div class="dragable"></div>', "", $template);
-
+	$template = str_replace('<i class="delete-section">X</i>', "", $template);
+$template = str_replace('Click here to Upload Image', "", $template);
 	// if(!is_dir("temp/".$templateName)) {
  //    	mkdir("temp/".$templateName); // add company into this as well
 	// }

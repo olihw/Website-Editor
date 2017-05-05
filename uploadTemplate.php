@@ -25,7 +25,7 @@ if ($uploadOk == 0) {
     if (move_uploaded_file($_FILES["templateUploaded"]["tmp_name"], $target_file)) {
         echo "The file ". $target_file . " has been uploaded.";
 
-		$con = mysqli_connect("localhost", "root", "root")or die(mysql_error());
+		$con = mysqli_connect("localhost", "maoh3", "9P1SYmEK4I")or die(mysql_error());
 		mysqli_select_db($con ,"c452project")or die("Cannot connect to database");
 		$query = mysqli_query($con, "INSERT INTO templates (`CompanyID`, `Template Name`, `Template location`) VALUES ('1', '$templateName', '$templateLocation')");
 

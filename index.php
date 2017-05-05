@@ -105,7 +105,7 @@
 		<input type="submit" class="submit" value="Login"/>
 	</form>
 	<p class="register-title">Click to Register</p>
-	<form action="register.php" method="post" class="register-form">
+	<form action="passwordhash.php" method="post" class="register-form">
 		<div class="login-inputs">
 			<label for="companyName">Company Name: </label>
 			<input type="text" name="companyName">

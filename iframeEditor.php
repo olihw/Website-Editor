@@ -232,12 +232,24 @@
 	    right: 0;
 	    top: 0;
 	    margin: 10px;
+	    z-index: 98;	
 	}
 
 	.savePage, .downloadPage, .previewPage, .addComponent {
 		border: solid 1px;
 		background-color: white;
 		padding: 10px 20px;
+	}
+
+	.delete-section-pop-up {
+		display: none;
+		height: 100px;
+		width: 350px;
+		text-align: center;
+		position: fixed;
+		top: 40%;
+		background-color: white;
+		left: 35%;
 	}
 
 </style>
@@ -289,6 +301,11 @@
 		<p>Do you wish to save before you download?</p>
 		<button class="yesSave">Yes</button>
 		<button class="noSave">No</button>
+	</div>
+	<div class="delete-section-pop-up">
+		<p>Do you wish to delete this section?</p>
+		<button class="delete-section-confirm">Yes</button>
+		<button class="delete-section-no">No</button>
 	</div>
 	<div class="componentMenu">
 		<button class="componentLibraryBtn">Component Library</button>
@@ -394,7 +411,6 @@
 			$(".componentMenu").hide();
 		});
 
-
 		$("#uploadComponent").submit(function(e){
 			$.ajax({
 				url: 'uploadComponent.php',
@@ -467,6 +483,10 @@
 
 			imageDropzone();
 			textEditBind();
+
+			$(".delete-section").click(function(){
+				$(this).parent().closest("section").remove();
+			});
 		}
 
 		function imageDropzone() {
@@ -580,6 +600,7 @@
 
 		function savePages(downloadable) {
 			$("img").unwrap();
+			$(".dz-default").remove();
 			var page = $(".htmlContainer")[0].innerHTML;
 			$.ajax({
 			url: "saveTemplates.php",
@@ -598,7 +619,8 @@
 				} else {
 					
 				}
-				$("img").wrap("<div class='dropzone'></div>");
+
+				imageDropzone();
 			}});
 		}
 

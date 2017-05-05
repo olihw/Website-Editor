@@ -2,7 +2,7 @@
 	$template = $_POST['template'];
 	$version = $_POST['version'];
 
-	$con = mysqli_connect("localhost", "root", "root")or die(mysql_error());
+	$con = mysqli_connect("localhost", "maoh3", "9P1SYmEK4I")or die(mysql_error());
 	mysqli_select_db($con ,"c452project")or die("Cannot connect to database");
 	
 	$queryString = "Select * from templates INNER JOIN templateversion ON templates.`Template ID` = templateversion.TemplateID WHERE `Template Name` = '".$template."' && `Version Number` =".$version;
